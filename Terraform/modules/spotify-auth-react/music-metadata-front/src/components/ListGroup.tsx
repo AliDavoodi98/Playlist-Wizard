@@ -2,6 +2,12 @@ import { Fragment } from "react/jsx-runtime";
 import {MouseEvent, useDebugValue, useEffect, useState} from "react";
 import axios from "axios";
 import FetchSpotify from "./FetchSpotify";
+import { RowsPhotoAlbum } from "react-photo-album";
+import "react-photo-album/rows.css";
+import { UnstableSSR as SSR } from "react-photo-album/ssr";
+import { UnstableServerPhotoAlbum as ServerPhotoAlbum } from "react-photo-album/server";
+
+
 
 interface Props {
   token: string;
@@ -9,9 +15,12 @@ interface Props {
 
 const ListGroup = ({token}: Props) => {
   const handleClick = (event: MouseEvent) => console.log(event);
-  const logimage = ((image: JSON) => console.log(image));
+  const logimage = ((image: any[]) => console.log(image));
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
+  const [imgs, setImg] = useState<any[]>([]);
+  const [processedImages, setProcessedImages] = useState<any[]>([]);
+
   let method = "GET";
   let body = null;
   let endpoint = 'v1/me/top/tracks';
@@ -22,6 +31,20 @@ const ListGroup = ({token}: Props) => {
         const response = await FetchSpotify({endpoint: endpoint,token: token, method: method});
         //const result = await response.json();
         setData(response.items);
+
+        const sources = response.items.map(
+          (item: any) => item.album.images[0]
+        );
+
+        setImg(sources);
+        
+        const processedImages = imgs.map(image => ({
+          src: image.url,
+          width: image.width,
+          height: image.height,
+        }));
+        
+        setProcessedImages( processedImages);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -41,14 +64,14 @@ const ListGroup = ({token}: Props) => {
       {loading && <p>Loading...</p>}
       {!loading && data.length === 0 && <p>No item found</p>}
       {data.length === 0 && <p>No item found</p>}
-      <ul className="list-group">
+      {/* <ul className="list-group">
         {data.map((item, index) => (
           <li
             className={
                 selectedIndex === index ? "list-group-item active" : "list-group-item"
             }
             key={item.id}
-            onClick={() => {setSelectedIndex(index); handleClick; logimage(item);}}
+            onClick={() => {setSelectedIndex(index); handleClick; logimage(imgs);}}
           >
             <span className="pull-left">
               <img src={item.album.images[0].url} className="img-responsive img-rounded" />
@@ -56,7 +79,14 @@ const ListGroup = ({token}: Props) => {
             {item.name}
           </li>
         ))}
-      </ul>
+      </ul> */}
+      <RowsPhotoAlbum 
+        photos={processedImages}
+        targetRowHeight={150}
+        spacing={10}
+      />
+
+
     </Fragment>
   );
 }
