@@ -1,1 +1,1 @@
-# Playlist-Wizard
+# Playlist Wizard
