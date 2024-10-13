@@ -4,11 +4,12 @@ import axios from "axios";
 import FetchSpotify from "./FetchSpotify";
 
 interface Props {
-  token: String;
+  token: string;
 }
 
-const ListGroup = (props: Props) => {
+const ListGroup = ({token}: Props) => {
   const handleClick = (event: MouseEvent) => console.log(event);
+  const logimage = ((image: JSON) => console.log(image));
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   let method = "GET";
@@ -18,14 +19,9 @@ const ListGroup = (props: Props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://api.spotify.com/${endpoint}`, {
-            headers: {
-              Authorization: `Bearer ${props.token}`,
-            },
-            method
-          });
-        const result = await response.json();
-        setData(result.items);
+        const response = await FetchSpotify({endpoint: endpoint,token: token, method: method});
+        //const result = await response.json();
+        setData(response.items);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -52,8 +48,11 @@ const ListGroup = (props: Props) => {
                 selectedIndex === index ? "list-group-item active" : "list-group-item"
             }
             key={item.id}
-            onClick={() => {setSelectedIndex(index); handleClick;}}
+            onClick={() => {setSelectedIndex(index); handleClick; logimage(item);}}
           >
+            <span className="pull-left">
+              <img src={item.album.images[0].url} className="img-responsive img-rounded" />
+            </span>
             {item.name}
           </li>
         ))}
