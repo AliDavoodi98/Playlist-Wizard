@@ -1,10 +1,16 @@
 import axios from "axios"
 
 
-const FetchSpotify = ({token, endpoint, method, body}) => {
+const FetchSpotify = async (token: string, endpoint: string, method: string, body: null) => {
 
-
-  async const FetchWebAPI = () => {
-    axios.get()
-  }
+    const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      method,
+      body:JSON.stringify(body)
+    });
+    return await res.json();
 }
+
+export default FetchSpotify;
