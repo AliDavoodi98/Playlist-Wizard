@@ -6,12 +6,12 @@ import FetchSpotify from "./FetchSpotify";
 const ListGroup = () => {
   const items = ["Eminem", "Jay-z", "Playboi Carti"];
   const handleClick = (event: MouseEvent) => console.log(event);
-  const token = 'BQAjsTw948KEz7XgZGe_iF0vLTTKtI6q-yq88k_jkGzpnZXyrPJZsVVUG9LBYRVDCVDlxnlSAg9ztmOZ_aMUvEDVmM7_fOzs27T9CKcLZxhYank9aINt78Fng9Hd9S7MBsgwYe3OfTRPxOcYjS5R91qfxjfqUSyx6TLqoZhU3vrlgHkb7Duy8fF41LOik9ec2uHut86PihF9k3EfxcRn4KGppWXLNY0Uie7GmIPckMTVBZs3NmcOHh7iSqyer_bCR9shCoCI5e8lyzUp54tHYoVemXSdbH2WY0bN';
+  const token = 'BQBKh6Ju7UdVlPxUokr72gYFg4U23BmH7TdtWJh9XCEKnAEJXvQ_fRAmifS0lPrU83nDqjqUfJXIcMabRj-3zbeTzkN6g2fJgHdL61-4gQ9hNR83m1bwr0X3TmB0RwTl4BGY9mUL--pqH2tmSOlW_qpPH0JEAxP57W77wU9HWmosnhgbuVQYrkbv-mQHeXsVlT-xDiQ6PxPIYB5JePbXZcewCcjH0PK_DJjvJ6-9wn5uWfFswZ-EGu6hLMgMi43DRiiCKvNVc-qPlq_o-23pmFlWqlgohVUP54qz';
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   let method = "GET";
   let body = null;
-  let endpoint = 'v1/me/top/tracks?time_range=long_term&limit=5';
+  let endpoint = 'v1/me/top/tracks';
 
   useEffect(() => {
     const fetchData = async () => {
