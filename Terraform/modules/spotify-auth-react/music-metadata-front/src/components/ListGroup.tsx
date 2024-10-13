@@ -3,10 +3,12 @@ import {MouseEvent, useDebugValue, useEffect, useState} from "react";
 import axios from "axios";
 import FetchSpotify from "./FetchSpotify";
 
-const ListGroup = () => {
-  const items = ["Eminem", "Jay-z", "Playboi Carti"];
+interface Props {
+  token: String;
+}
+
+const ListGroup = (props: Props) => {
   const handleClick = (event: MouseEvent) => console.log(event);
-  const token = 'BQBKh6Ju7UdVlPxUokr72gYFg4U23BmH7TdtWJh9XCEKnAEJXvQ_fRAmifS0lPrU83nDqjqUfJXIcMabRj-3zbeTzkN6g2fJgHdL61-4gQ9hNR83m1bwr0X3TmB0RwTl4BGY9mUL--pqH2tmSOlW_qpPH0JEAxP57W77wU9HWmosnhgbuVQYrkbv-mQHeXsVlT-xDiQ6PxPIYB5JePbXZcewCcjH0PK_DJjvJ6-9wn5uWfFswZ-EGu6hLMgMi43DRiiCKvNVc-qPlq_o-23pmFlWqlgohVUP54qz';
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   let method = "GET";
@@ -18,7 +20,7 @@ const ListGroup = () => {
       try {
         const response = await fetch(`https://api.spotify.com/${endpoint}`, {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${props.token}`,
             },
             method
           });
