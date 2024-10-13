@@ -1,18 +1,22 @@
+import axios from "axios"
 
+interface Props {
+  endpoint: string;
+  token: string;
+  method: string;
+  body?: any;
+}
 
-async function fetchWebApi(endpoint, method, body = {}) {
-    try {
-      const response = await axios({
-        url: `https://api.spotify.com/${endpoint}`,
-        method: method,
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        data: method !== 'GET' ? body : null,
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching from Spotify API:', error);
-      throw error;
-    }
-  }
+const FetchSpotify = async ({ endpoint, token, method, body }: Props) => {
+
+    const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      method,
+      body: method !=='GET' && body ? JSON.stringify(body) : undefined,
+    });
+    return await res.json();
+}
+
+export default FetchSpotify;
