@@ -64,26 +64,9 @@ const ListGroup = ({token}: Props) => {
       {loading && <p>Loading...</p>}
       {!loading && data.length === 0 && <p>No item found</p>}
       {data.length === 0 && <p>No item found</p>}
-      {/* <ul className="list-group">
-        {data.map((item, index) => (
-          <li
-            className={
-                selectedIndex === index ? "list-group-item active" : "list-group-item"
-            }
-            key={item.id}
-            onClick={() => {setSelectedIndex(index); handleClick; logimage(imgs);}}
-          >
-            <span className="pull-left">
-              <img src={item.album.images[0].url} className="img-responsive img-rounded" />
-            </span>
-            {item.name}
-          </li>
-        ))}
-      </ul> */}
       <RowsPhotoAlbum 
         photos={processedImages}
-        targetRowHeight={150}
-        spacing={10}
+        skeleton={<div style={{ width: "100%", minHeight: 800 }} />}
       />
 
 
