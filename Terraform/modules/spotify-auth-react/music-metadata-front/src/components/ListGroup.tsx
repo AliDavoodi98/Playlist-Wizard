@@ -23,7 +23,7 @@ const ListGroup = ({token}: Props) => {
 
   let method = "GET";
   let body = null;
-  let endpoint = 'v1/me/top/tracks';
+  let endpoint = 'v1/me/top/tracks?time_range=short_term&limit=50';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +32,11 @@ const ListGroup = ({token}: Props) => {
         //const result = await response.json();
         setData(response.items);
 
-        const sources = response.items.map(
+        const sources = response.items.filter(
+          (item: any) =>
+            item.album.name !== "Inja Tehroone" &&
+            item.artists.name !== "Alireza Gharaei Manesh"
+        ).map(
           (item: any) => item.album.images[0]
         );
 
@@ -60,7 +64,7 @@ const ListGroup = ({token}: Props) => {
 
   return (
     <Fragment>
-      <h1>token</h1>
+      <h1>Your Top Tracks for the past month!</h1>
       {loading && <p>Loading...</p>}
       
       {!loading && data.length === 0 && <p>No item found</p>}
@@ -72,8 +76,7 @@ const ListGroup = ({token}: Props) => {
         targetRowHeight={30}       
         spacing={15}              
         size={[
-          { width: 40, height: 30 }, 
-          { width: 30, height: 20 },
+          { width: 40, height: 30 }
         ]}
         breakpoints={[340, 102]}  
         skeleton={<div style={{ width: "100%", minHeight: 800 }} />}
