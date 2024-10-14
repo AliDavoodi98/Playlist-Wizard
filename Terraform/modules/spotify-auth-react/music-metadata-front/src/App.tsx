@@ -17,7 +17,11 @@ function App() {
     fetchToken()
 
   }, []);
-  return <div>{token && <ListGroup token={token}/>}</div>
+  return(     
+    <div>
+      {token ? <ListGroup token={token} /> : <p>No token found</p>}
+    </div>
+  );  
 }
 
 export default App;
