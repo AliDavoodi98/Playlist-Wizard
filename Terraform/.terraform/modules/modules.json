@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"api-gateway","Source":"./modules/api","Dir":"modules/api"},{"Key":"labda","Source":"./modules/lambda","Dir":"modules/lambda"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"api-gateway","Source":"./modules/api","Dir":"modules/api"},{"Key":"labda","Source":"./modules/lambda","Dir":"modules/lambda"},{"Key":"lambda","Source":"./modules/lambda","Dir":"modules/lambda"}]}

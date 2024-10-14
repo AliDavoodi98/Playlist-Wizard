@@ -65,7 +65,14 @@ const ListGroup = ({token}: Props) => {
       {!loading && data.length === 0 && <p>No item found</p>}
       {data.length === 0 && <p>No item found</p>}
       <RowsPhotoAlbum 
-        photos={processedImages}
+        photos={processedImages}     // Ensures row-based layout
+        targetRowHeight={30}       // Adjust row height to make it proportional
+        spacing={15}                // Space between images
+        size={[
+          { width: 40, height: 30 },  // Adjust sizes for responsiveness
+          { width: 30, height: 20 },
+        ]}
+        breakpoints={[340, 102]}   // Adjust behavior for different screen sizes
         skeleton={<div style={{ width: "100%", minHeight: 800 }} />}
       />
 
