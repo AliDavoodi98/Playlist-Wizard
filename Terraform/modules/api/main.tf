@@ -16,7 +16,7 @@ resource "aws_api_gateway_resource" "root" {
 resource "aws_api_gateway_method" "proxy" {
   rest_api_id = aws_api_gateway_rest_api.main_api.id 
   resource_id = aws_api_gateway_resource.root.id 
-  http_method = "OPTIONS"
+  http_method = "ANY"
   authorization = "NONE"
 }
 
@@ -35,7 +35,48 @@ resource "aws_api_gateway_method_response" "proxy" {
   resource_id = aws_api_gateway_resource.root.id 
   http_method = aws_api_gateway_method.proxy.http_method
   status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Credentials" = true
+  }
 }
+
+resource "aws_api_gateway_method" "options" {
+  rest_api_id   = aws_api_gateway_rest_api.main_api.id
+  resource_id   = aws_api_gateway_resource.root.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_method_response" "options_response" {
+  rest_api_id = aws_api_gateway_rest_api.main_api.id
+  resource_id = aws_api_gateway_resource.root.id
+  http_method = aws_api_gateway_method.options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Credentials" = true
+  }
+}
+
+
+resource "aws_api_gateway_integration" "options_integration" {
+  rest_api_id = aws_api_gateway_rest_api.main_api.id
+  resource_id = aws_api_gateway_resource.root.id
+  http_method = aws_api_gateway_method.options.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
 
 resource "aws_api_gateway_integration_response" "proxy" {
   rest_api_id = aws_api_gateway_rest_api.main_api.id 
@@ -43,15 +84,26 @@ resource "aws_api_gateway_integration_response" "proxy" {
   http_method = aws_api_gateway_method.proxy.http_method
   status_code = aws_api_gateway_method_response.proxy.status_code
 
+    response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET, POST, OPTIONS'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type, Origin, Accept'"
+    "method.response.header.Access-Control-Allow-Credentials" = "'true'"
+  }
+
   depends_on = [ 
     aws_api_gateway_method.proxy,
     aws_api_gateway_integration.lambda_integration
    ]
 }
 
+
 resource "aws_api_gateway_deployment" "deployment" {
   depends_on = [
-    aws_api_gateway_integration.lambda_integration
+    aws_api_gateway_method.proxy,
+    aws_api_gateway_integration.lambda_integration,
+    aws_api_gateway_method.options,
+    aws_api_gateway_integration.options_integration
   ]
 
   rest_api_id = aws_api_gateway_rest_api.main_api.id
@@ -63,5 +115,5 @@ resource "aws_lambda_permission" "api_gateway_permission" {
   action        = "lambda:InvokeFunction"
   function_name = var.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.main_api.execution_arn}/dev/*"
+  source_arn    = "${aws_api_gateway_rest_api.main_api.execution_arn}/*/*"
 }

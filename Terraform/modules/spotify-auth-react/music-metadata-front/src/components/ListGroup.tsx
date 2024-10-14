@@ -53,28 +53,32 @@ const ListGroup = ({token}: Props) => {
     };
 
     fetchData();
-  }, []);
+  }, [token, endpoint, method]);
 
   // Hook
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   return (
     <Fragment>
-      <h1>List</h1>
+      <h1>token</h1>
       {loading && <p>Loading...</p>}
+      
       {!loading && data.length === 0 && <p>No item found</p>}
       {data.length === 0 && <p>No item found</p>}
+
+      {!loading && processedImages.length > 0 && (
       <RowsPhotoAlbum 
-        photos={processedImages}     // Ensures row-based layout
-        targetRowHeight={30}       // Adjust row height to make it proportional
-        spacing={15}                // Space between images
+        photos={processedImages}     
+        targetRowHeight={30}       
+        spacing={15}              
         size={[
-          { width: 40, height: 30 },  // Adjust sizes for responsiveness
+          { width: 40, height: 30 }, 
           { width: 30, height: 20 },
         ]}
-        breakpoints={[340, 102]}   // Adjust behavior for different screen sizes
+        breakpoints={[340, 102]}  
         skeleton={<div style={{ width: "100%", minHeight: 800 }} />}
       />
+      )}
 
 
     </Fragment>
