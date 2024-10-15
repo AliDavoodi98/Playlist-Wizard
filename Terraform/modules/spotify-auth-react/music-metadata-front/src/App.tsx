@@ -7,7 +7,7 @@ function App() {
   useEffect(()=>{
     async function fetchToken() {
       try {
-        const response = await fetch("https://hexvu13e4m.execute-api.us-east-1.amazonaws.com/dev/push-token")
+        const response = await fetch("API-ENDPOINT")
         const data = await response.json();
         setToken(data.token);
       } catch (error) {

@@ -1,5 +1,4 @@
 exports.handler = async (event) => {
-    console.log("hiii");
     return {
       statusCode: 200,
       headers: {
