@@ -3,16 +3,20 @@
 body {
     background-color: #1a1a1a; /* Dark background */
     color: #fff; /* Light text color for contrast */
-    margin: 0;
+    margin: 10;
     padding: 0;
     font-family: Arial, sans-serif;
   }
   
-  .photo-frame {
-    border: 5px solid #fff; /* White frame */
-    border-radius: 8px; /* Rounded corners */
-    overflow: hidden; /* Ensure image stays inside frame */
-    transition: transform 0.2s ease;
+  .photo-frame img {
+    width: 30%;      /* Make sure the image fits the frame */
+    height: auto;     /* Maintain aspect ratio */
+    object-fit: cover; /* Ensure the image fills the frame neatly */
+    max-width: 40px;
+    max-height: 30px;
+    border: 2px solid #fff; /* Frame border */
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
   }
   
   .photo-frame:hover {

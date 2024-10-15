@@ -1,15 +1,21 @@
 import { Fragment } from "react/jsx-runtime";
-import { MouseEvent, useEffect, useState } from "react";
+import {MouseEvent, useDebugValue, useEffect, useState} from "react";
+import axios from "axios";
 import FetchSpotify from "./FetchSpotify";
 import { RowsPhotoAlbum } from "react-photo-album";
-import "./style.css"; // Import your CSS file
+import "react-photo-album/rows.css";
+import { UnstableSSR as SSR } from "react-photo-album/ssr";
+import { UnstableServerPhotoAlbum as ServerPhotoAlbum } from "react-photo-album/server";
+
+
 
 interface Props {
   token: string;
 }
 
-const ListGroup = ({ token }: Props) => {
+const ListGroup = ({token}: Props) => {
   const handleClick = (event: MouseEvent) => console.log(event);
+  const logimage = ((image: any[]) => console.log(image));
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   const [imgs, setImg] = useState<any[]>([]);
@@ -17,39 +23,35 @@ const ListGroup = ({ token }: Props) => {
 
   let method = "GET";
   let body = null;
-  let endpoint = "v1/me/top/tracks?time_range=short_term&limit=50";
+  let endpoint = 'v1/me/top/tracks?time_range=short_term&limit=50';
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await FetchSpotify({
-          endpoint: endpoint,
-          token: token,
-          method: method,
-        });
+        const response = await FetchSpotify({endpoint: endpoint,token: token, method: method});
+        //const result = await response.json();
         setData(response.items);
 
-        const sources = response.items
-          .filter(
-            (item: any) =>
-              item.album.name !== "Inja Tehroone" &&
-              item.artists.name !== "Alireza Gharaei Manesh" &&
-              item.artists.name !== "¥$"
-          )
-          .map((item: any) => item.album.images[0]);
+        const sources = response.items.filter(
+          (item: any) =>
+            item.album.name !== "Inja Tehroone" &&
+            item.artists.name !== "Alireza Gharaei Manesh" &&
+            item.artists.name !== "¥$"
+        ).map(
+          (item: any) => item.album.images[0]
+        );
 
         setImg(sources);
-
-        const processedImages = sources.map((image) => ({
+        
+        const processedImages = imgs.map(image => ({
           src: image.url,
           width: image.width,
           height: image.height,
-          className: "photo-frame", // Apply the frame class
         }));
-
-        setProcessedImages(processedImages);
+        
+        setProcessedImages( processedImages);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
@@ -58,26 +60,40 @@ const ListGroup = ({ token }: Props) => {
     fetchData();
   }, [token, endpoint, method]);
 
+  // Hook
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+
   return (
     <Fragment>
-      <h1>Your Top Tracks for the past month!</h1>
+      <div
+              style={{
+                backgroundColor: "black",
+                color: "white", 
+                minHeight: "100vh", 
+                padding: "20px", 
+              }}>
+      <h2>Your Top Tracks for the past month!</h2>
       {loading && <p>Loading...</p>}
-
+      
       {!loading && data.length === 0 && <p>No item found</p>}
+      {data.length === 0 && <p>No item found</p>}
 
       {!loading && processedImages.length > 0 && (
-        <RowsPhotoAlbum
-          photos={processedImages}
-          targetRowHeight={30}
-          spacing={15}
-          size={[{ width: 40, height: 30 }]}
-          breakpoints={[340, 102]}
-          className="rows-photo-album"
-          skeleton={<div style={{ width: "100%", minHeight: 800 }} />}
-        />
+      <RowsPhotoAlbum 
+        photos={processedImages}     
+        targetRowHeight={30}       
+        spacing={15}              
+        size={[
+          { width: 40, height: 30 }
+        ]}
+        breakpoints={[340, 102]}  
+        skeleton={<div style={{ width: "100%", minHeight: 800 }} />}
+      />
       )}
+
+      </div>
     </Fragment>
   );
-};
+}
 
 export default ListGroup;
