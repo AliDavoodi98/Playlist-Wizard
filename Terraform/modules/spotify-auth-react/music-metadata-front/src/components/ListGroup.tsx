@@ -23,7 +23,7 @@ const ListGroup = ({token}: Props) => {
 
   let method = "GET";
   let body = null;
-  let endpoint = 'v1/me/top/tracks';
+  let endpoint = 'v1/me/top/tracks?time_range=short_term&limit=50';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +60,14 @@ const ListGroup = ({token}: Props) => {
 
   return (
     <Fragment>
-      <h1>token</h1>
+      <div
+              style={{
+                backgroundColor: "black",
+                color: "white", 
+                minHeight: "100vh", 
+                padding: "20px", 
+              }}>
+      <h2>Your Top Tracks for the past month!</h2>
       {loading && <p>Loading...</p>}
       
       {!loading && data.length === 0 && <p>No item found</p>}
@@ -72,15 +79,14 @@ const ListGroup = ({token}: Props) => {
         targetRowHeight={30}       
         spacing={15}              
         size={[
-          { width: 40, height: 30 }, 
-          { width: 30, height: 20 },
+          { width: 40, height: 30 }
         ]}
         breakpoints={[340, 102]}  
         skeleton={<div style={{ width: "100%", minHeight: 800 }} />}
       />
       )}
 
-
+      </div>
     </Fragment>
   );
 }
