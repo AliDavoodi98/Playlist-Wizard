@@ -32,12 +32,7 @@ const ListGroup = ({token}: Props) => {
         //const result = await response.json();
         setData(response.items);
 
-        const sources = response.items.filter(
-          (item: any) =>
-            item.album.name !== "Inja Tehroone" &&
-            item.artists.name !== "Alireza Gharaei Manesh" &&
-            item.artists.name !== "¥$"
-        ).map(
+        const sources = response.items.map(
           (item: any) => item.album.images[0]
         );
 
